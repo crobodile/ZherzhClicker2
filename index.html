@@ -4,7 +4,29 @@
     
 <head>
 <title>Ʒerʒ Clicker 2</title>
+<!--- 
+ALL THE SCRIPTS ARE BELOW
+PLEASE KEEP SECTIONS SEPARATE
+--->
+<script>
+    //VARIABLES
+    var coins = 0;
+    var clickValue = 1;
     
+    //FUNCTIONS
+    function addCoins(num) {
+        coins += num;
+        updateScreen();
+    }   
+    function updateScreen(){
+        document.getElementById("coinDisplay").innerHTML = coins;
+    }
+    
+</script>
+<!--- 
+END OF SCRIPTS
+STYLES ARE BELOW
+--->
 <style>
     body { 
     background-image: url('zherzhbackground.png');
@@ -76,16 +98,19 @@
 </style>
     
 </head>
-    
+<!--- 
+END OF STYLES
+FORMATTING IS BELOW
+--->
 <body>
      <div id = "console" class = "content">
-        <span style="position:absolute; padding:10px; bottom:0px">> no code yet, just making the whole layout first<br>> code will come</span>
+        <span style="position:absolute; padding:10px; bottom:0px">> basically no code yet, just making the whole layout first<br>> code will come</span>
     </div>
     
     <div id= "topleft" class = "content">
-        <h1 class = "center" style = "top:15px;color:gold;" id = "coinDisplay">0</h1>
+        <h1 id = "coinDisplay" class = "center" style = "top:15px;color:gold;" >0</h1>
         <img src="zherzhcoin.png" class = "center" style = "top:100px;width:100px;height:100px">
-        <button id = "zherzhButton">Generate ƷerʒCoin</button>
+        <button onclick ="addCoins(clickValue)" id = "zherzhButton">Generate ƷerʒCoin</button>
     </div>
     
     <div id= "topright" class = "content">
@@ -97,9 +122,6 @@
             <h3 class="center" style = "font-weight: normal">Boosts</h3>
         </div>
     </div>
-    
-   
-    
 </body>
 
 </html>
