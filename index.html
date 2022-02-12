@@ -4,15 +4,101 @@
     
 <head>
 <title>Ʒerʒ Clicker 2</title>
+    
 <style>
     body { 
     background-image: url('zherzhbackground.png');
     background-attachment: fixed;
+    font-family: Arial, Helvetica, sans-serif;
+    }
+    .content {
+    background-color: white;
+    border: 5px solid gray;
+    border-radius: 20px;
+    position: absolute;
+   
+    }
+    #topleft {
+        width: 30%;
+        left: 2.5%;
+        top: 190px;
+        height: 400px;
+        border-color: #c8facb;
+    }
+    #topright{
+        width: 62.5%;
+        left: 35%;
+        top:190px;
+        height: 400px;
+        border-color: #fac8c8;
+    }
+    #console{
+        width:95%;
+        left:2.5%;
+        top: 20px;
+        height:150px;
+        background-color: #2e2e2e;
+        color: white;
+        border-radius: 0px; 
+        font-family: monospace;
+    }
+    #zherzhButton{
+        width:80%;
+        position:absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translate(-50%,-10%);
+        height: 40%;
+        border: 5px solid green;
+        border-radius: 15px;
+        background-color: green;
+        color: white;
+        font-weight:bold;
+        font-size:30px;
+    }
+    #zherzhButton:hover{
+        border: 5px solid lime;
+    }
+    .center{
+        position:absolute;
+        top: 10px;
+        left: 50%;
+        transform: translate(-50%,-10%);
+    }
+    .upgrades{
+        position:absolute;
+        border: 1px solid black;
+        width: 40%;
+        height: 275px;
+        top: 85px;
+        border-radius:15px;
     }
 </style>
+    
 </head>
     
 <body>
+     <div id = "console" class = "content">
+        <span style="position:absolute; padding:10px; bottom:0px">> no code yet, just making the whole layout first<br>> code will come</span>
+    </div>
+    
+    <div id= "topleft" class = "content">
+        <h1 class = "center" style = "top:50px" id = "coinDisplay">0</h1>
+        <h1 class = "center" style = "top:100px">ƷerʒCoin</h1>
+        <button id = "zherzhButton">Generate ƷerʒCoin</button>
+    </div>
+    
+    <div id= "topright" class = "content">
+        <h1 style = "position:absolute; left:5%;">Upgrades</h1>
+        <div class= "upgrades" id="miners" style="left:5%">
+            <h3 class="center" style = "font-weight: normal">Miners</h3>
+        </div>
+        <div class= "upgrades" id="boosts" style="right:5%">
+            <h3 class="center" style = "font-weight: normal">Boosts</h3>
+        </div>
+    </div>
+    
+   
     
 </body>
 
