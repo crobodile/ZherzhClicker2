@@ -26,10 +26,14 @@ PLEASE KEEP SECTIONS SEPARATE
     var minercost = 10;
     var boostcost = 10;
     var minerClicks = 0;
+    var minerMultiplier = 1;
     var buttonIds = [
         "minerbutton",
         "boostbutton",
-        "nftPurchase0"
+        "nftPurchase0",
+        "nftPurchase1",
+        "nftPurchase2",
+        "nftPurchase3",
     ];
     var buttonPrices = [
         //IN FUNCTION
@@ -40,12 +44,18 @@ PLEASE KEEP SECTIONS SEPARATE
     var tickpoint = 0;
     var tickpoints =[
 
-        40,//0
+        30,//0
         60,
+        120,
+        180,
+        240
     ];
     var tickMsgs=[
         "News source says ƷerʒCoin is predicted to go up 17341057%.",//0
         "Reach 5000 Total ƷerʒCoin to unlock the Gallery",
+        "Feel free to send any suggestions to me on what to add/change",
+        "NFTs increase in value more when you own them, and provide a bonus stat",
+        "A lot of things get messed up if you use a smaller window size, idk how to use CSS good"
     ];
     
     var totalCoins = 0;
@@ -59,6 +69,7 @@ PLEASE KEEP SECTIONS SEPARATE
         30000,
         50000,
         100000,
+        1000000,
     ];
     var checkMsgs = [
         //inside function
@@ -66,11 +77,22 @@ PLEASE KEEP SECTIONS SEPARATE
     
     var nfts = [
         0,
+        0,
+        0,
+        0,
     ];
     var nftcost = [
         5000,
+        50000,
+        500000,
+        5000000
     ]
-    
+    var priceOnBuy = [
+        0,
+        0,
+        0,
+        0
+    ]
     //FUNCTIONS
     function addCoins(num) {
         totalCoins += num;
@@ -91,8 +113,8 @@ PLEASE KEEP SECTIONS SEPARATE
     }
     function updateScreen(){
         checkButtons();
-        checkCheckpoint()
-        
+        checkCheckpoint();
+        updateNFTs();
         document.getElementById("coinDisplay").innerHTML = coins;
         
     }
@@ -105,6 +127,7 @@ PLEASE KEEP SECTIONS SEPARATE
         checkMsgs[5] = "Reached 30000 ƷerʒCoin in " + secondsToTime(tick) + "!";
         checkMsgs[6] = "Reached 50000 ƷerʒCoin in " + secondsToTime(tick) + "!";
         checkMsgs[7] = "Reached 100000 ƷerʒCoin in " + secondsToTime(tick) + "!";
+        checkMsgs[8] = "Gained 1000000 ƷerʒCoin in " + secondsToTime(tick) + "!";
         
     
         if(totalCoins >= checkpoints[checkpoint]){
@@ -135,7 +158,10 @@ PLEASE KEEP SECTIONS SEPARATE
         buttonPrices = [
             minercost,
             boostcost,
-            nftcost[0]
+            nftcost[0],
+            nftcost[1],
+            nftcost[2],
+            nftcost[3],
         ];
         for(var i = 0; i<buttonIds.length; i++){
             if (coins < buttonPrices[i]){
@@ -201,6 +227,7 @@ PLEASE KEEP SECTIONS SEPARATE
         }
     }
     function unlockMegaMiners(){
+        consoleMsg("Mega Miners researched, miners now give 30 per second")
         miners = 1;
         minerValue = 30;
         minercost = 500;
@@ -211,6 +238,7 @@ PLEASE KEEP SECTIONS SEPARATE
         updateScreen();
     }
     function unlockMinerClick(){
+        consoleMsg("Unlocked Miner Clicks, clicking now boosts your miners forward")
         clickValue = 1;
         boostcost = 2000;
         minerClicks=1;
@@ -223,11 +251,61 @@ PLEASE KEEP SECTIONS SEPARATE
     function purchaseNFT(num){
         if(coins>=nftcost[num] && nfts[num] == 0){
             coins -= nftcost[num];
+            priceOnBuy[num]=nftcost[num];
             nfts[num] = 1;
             document.getElementById("nftstatus"+num).innerHTML = "Owned";
-            consoleMsg(nfts[num]);
             updateScreen();
+            if(num == 3){
+                consoleMsg("This is the end of the game fo now idk what else to add")
+                consoleMsg("Screenshot this message and DM to crobodile#0905 to recieve your coin.");
+            }
         }
+    }
+    function sellNFT(num){
+     if(nfts[num]==1){
+         nfts[num] = 0;
+         totalCoins -= priceOnBuy[num];
+         addCoins(nftcost[num]);
+     }                 
+    }
+    function updateNFTs(){
+        for(var i = 0; i< nfts.length;i++){
+            if(nfts[i]==1){
+                document.getElementById("nftstatus"+i).innerHTML = "Owned";
+                document.getElementById("nftPurchase"+i).style.display = "none";
+                document.getElementById("nftSell"+i).style.display = "block";
+                if(i == 0){
+                    minerMultiplier = 1.1;
+                }
+            } else {
+                document.getElementById("nftstatus"+i).innerHTML = "For Sale";
+                document.getElementById("nftSell"+i).style.display = "none";
+                document.getElementById("nftPurchase"+i).style.display = "block";
+                if(i == 0){
+                    minerMultiplier = 1;
+                }
+            }
+        document.getElementById("nftcost"+i).innerHTML = nftcost[i];
+        }
+        
+    }
+    function calculateNFTs(){
+        if(document.getElementById("gallery").display != "none"){
+            for(var i = 0; i< nfts.length;i++){
+                if(nfts[i]==1){
+                    if(nfts[2] == 1){
+                        nftcost[i] = Math.floor(nftcost[i] * getRandomArbitrary(.95,1.11));
+                    } else {
+                        nftcost[i] = Math.floor(nftcost[i] * getRandomArbitrary(.95,1.08));
+                    }
+                } else {
+                    nftcost[i] = Math.floor(nftcost[i] * getRandomArbitrary(.95,1.06));
+                }
+            }
+        }
+    }
+    function getRandomArbitrary(min, max) {
+        return Math.random() * (max - min) + min;
     }
     
    //ON START
@@ -249,8 +327,12 @@ PLEASE KEEP SECTIONS SEPARATE
             consoleMsg(tickMsgs[tickpoint]);
             tickpoint++;
         }
-        income = miners * minerValue;
+        income = Math.floor(miners * minerValue * minerMultiplier);
         addCoins(income);
+        calculateNFTs();
+        if(nfts[1]==1){
+            clickFn();
+        }
     }
 </script>
     
@@ -262,8 +344,8 @@ STYLES ARE BELOW
     body { 
     background-image: url('zherzhbackground.png');
     background-attachment: fixed;
-    font-family: Arial, Helvetica, sans-serif;
-    min-height: 140vh;
+    font-family: 'Times New Roman', serif;
+    min-height: 160vh;
     }
     .content {
     background-color: white;
@@ -278,7 +360,7 @@ STYLES ARE BELOW
         top: 190px;
         height: 400px;
         border-color: #c8facb;
-        transition: left .2s ease-in-out;
+        transition: left .5s ease-in-out;
     }
     #topright{
         width: 62.5%;
@@ -286,7 +368,7 @@ STYLES ARE BELOW
         top:190px;
         height: 400px;
         border-color: #fac8c8;
-        transition-delay: .3s;
+        transition-delay: .6s;
     }
     #console{
         font-size:16px;
@@ -303,7 +385,7 @@ STYLES ARE BELOW
         width: 95%;
         left: 2.5%;
         top:620px;
-        height: 400px;
+        height: 500px;
         border-color: #b28fff;
     }
 
@@ -357,10 +439,11 @@ STYLES ARE BELOW
         top:90px;
         left:20px;
     }
-    .upgradestat{
+    .nftstat{
         position:absolute;
-        bottom:10px;
+        bottom:-5px;
         left:30px;
+        color: darkgreen;
     }
     .unlocked{
         opacity: 0;
@@ -390,7 +473,7 @@ STYLES ARE BELOW
         position:absolute;
         border: 1px solid black;
         width: 20%;
-        height: 275px;
+        height: 375px;
         top: 85px;
         border-radius:15px;
         box-shadow: 0 0 10px black;
@@ -398,12 +481,21 @@ STYLES ARE BELOW
     #nft0{
         left: 10px;
     }
+    #nft1{
+        left:25%;
+    }
+    #nft2{
+        left: 50%;
+    }
+    #nft3{
+        left: 75%;
+    }
     .nftimage{
-        height: 60%;
+        height: 50%;
         width: auto;
         position:absolute;
         left:10px;
-        top:20%;
+        top:15%;
     }
     .nftLabel{
         position:absolute;
@@ -411,19 +503,32 @@ STYLES ARE BELOW
     }
     .nftValueLabel{
         position:absolute;
-        right: 20px;
-        bottom:60%;
+        left: 130px;
+        bottom:45px;
     }
     .nftPurchase{
         position:absolute;
-        right: 10px;
-        bottom: 30%;
+        left: 10px;
+        bottom: 50px;
         background-color: darkseagreen;
         color: white;
         border: none;
         border-radius: 15px;
         height: 40px;
-        width:40
+        width:100px;
+        display: none;
+    }
+    .nftSell{
+        position:absolute;
+        left: 10px;
+        bottom: 50px;
+        background-color: darkorange;
+        color: white;
+        border: none;
+        border-radius: 15px;
+        height: 40px;
+        width:100px;
+        display:none;
     }
     .nftPurchase:disabled{
         background-color: indianred;
@@ -436,7 +541,7 @@ END OF STYLES
 FORMATTING IS BELOW
 --->
 <body>
-    <button onclick = "devButton();" style = "z-index: 3;position:absolute;right:35px;top:26px;display:block">Dev Menu</button>
+    <button onclick = "devButton();" style = "z-index: 3;position:absolute;right:35px;top:26px;display:none">Dev Menu</button>
     <div id="devMenu" class="content">
         <button onclick = "addCoins(1)" style = "position: absolute;left:20px;top:20px">+1</button>
         <button onclick = "addCoins(10)" style = "position: absolute;left:20px;top:40px">+10</button>
@@ -489,6 +594,32 @@ FORMATTING IS BELOW
             <h3 class = "nftLabel">Cat Drinking: <span id = "nftstatus0">For Sale</span></h3>
             <p class = "nftValueLabel">Value: <span id=nftcost0>5000</span></p>
             <button onclick = "purchaseNFT(0)" class = "nftPurchase" id = "nftPurchase0">Purchase NFT</button>
+            <button onclick = "sellNFT(0)" class = "nftSell" id = "nftSell0">Sell NFT</button>
+            <p class = "nftstat">Bonus: 10% Miner Output</p>
+        </div>
+        <div class = "nft" id = "nft1">
+            <img class = "nftimage" src="homie.png">
+            <h3 class = "nftLabel">Homie: <span id = "nftstatus1">For Sale</span></h3>
+            <p class = "nftValueLabel">Value: <span id=nftcost1>50000</span></p>
+            <button onclick = "purchaseNFT(1)" class = "nftPurchase" id = "nftPurchase1">Purchase NFT</button>
+            <button onclick = "sellNFT(1)" class = "nftSell" id = "nftSell1">Sell NFT</button>
+            <p class = "nftstat">Bonus: 1 Auto Click Per Second</p>
+        </div>
+        <div class = "nft" id = "nft2">
+            <img class = "nftimage" src="monkeydrip.gif">
+            <h3 class = "nftLabel">Monki Drip: <span id = "nftstatus2">For Sale</span></h3>
+            <p class = "nftValueLabel">Value: <span id=nftcost2>500000</span></p>
+            <button onclick = "purchaseNFT(2)" class = "nftPurchase" id = "nftPurchase2">Purchase NFT</button>
+            <button onclick = "sellNFT(2)" class = "nftSell" id = "nftSell2">Sell NFT</button>
+            <p class = "nftstat">Bonus: Owned NFTS gain value quicker</p>
+        </div>
+        <div class = "nft" id = "nft3">
+            <img class = "nftimage" src="nomug.png">
+            <h3 class = "nftLabel">No MUG?: <span id = "nftstatus3">For Sale</span></h3>
+            <p class = "nftValueLabel">Value: <span id=nftcost3>5000000</span></p>
+            <button onclick = "purchaseNFT(3)" class = "nftPurchase" id = "nftPurchase3">Purchase NFT</button>
+            <button onclick = "sellNFT(3)" class = "nftSell" id = "nftSell3">Sell NFT</button>
+            <p class = "nftstat">Bonus: I will send you 1 ZherzhCoin (1 per person)</p>
         </div>
         
     </div>
