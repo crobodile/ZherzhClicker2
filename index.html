@@ -23,6 +23,7 @@ PLEASE KEEP SECTIONS SEPARATE
     var miners = 0;
     var income = 0;
     var minerValue = 1;
+    var remainder = 0;
     var minercost = 10;
     var boostcost = 10;
     var minerClicks = 0;
@@ -135,6 +136,7 @@ PLEASE KEEP SECTIONS SEPARATE
                 unlockUpgrades();
             }else if(checkpoint == 3){
                 unlockGallery();
+                var economyLoop = setInterval(economyFn,(1000));
             }
             consoleMsg(checkMsgs[checkpoint]);
             checkpoint++;
@@ -151,7 +153,7 @@ PLEASE KEEP SECTIONS SEPARATE
                 } else if(minutes>0){
                     return(minutes + " minutes and "+ second +" seconds");
                 }else{
-                    return(second +" seconds");
+                    return(Math.floor(second) +" seconds");
                 }
             }
     function checkButtons(){
@@ -294,12 +296,12 @@ PLEASE KEEP SECTIONS SEPARATE
             for(var i = 0; i< nfts.length;i++){
                 if(nfts[i]==1){
                     if(nfts[2] == 1){
-                        nftcost[i] = Math.floor(nftcost[i] * getRandomArbitrary(.95,1.11));
+                        nftcost[i] = Math.floor(nftcost[i] * getRandomArbitrary(.95,1.10));
                     } else {
-                        nftcost[i] = Math.floor(nftcost[i] * getRandomArbitrary(.95,1.08));
+                        nftcost[i] = Math.floor(nftcost[i] * getRandomArbitrary(.95,1.07));
                     }
                 } else {
-                    nftcost[i] = Math.floor(nftcost[i] * getRandomArbitrary(.95,1.06));
+                    nftcost[i] = Math.floor(nftcost[i] * getRandomArbitrary(.95,1.055));
                 }
             }
         }
@@ -316,19 +318,24 @@ PLEASE KEEP SECTIONS SEPARATE
         consoleMsg("ƷerʒClicker 2!");
         checkButtons;
         //ACTIVATE TICK LOOP
-        var tickLoop = setInterval(tickFn,1000);
+        var tickLoop = setInterval(tickFn,(1000/60));
     }
     
     //TICK LOOP
     function tickFn(){
         
-        tick++;
+        tick += (1/60);
         if(tick >= tickpoints[tickpoint]){
             consoleMsg(tickMsgs[tickpoint]);
             tickpoint++;
         }
-        income = Math.floor(miners * minerValue * minerMultiplier);
+        income = Math.floor(miners * minerValue * minerMultiplier/60);
+        remainder += (miners * minerValue * minerMultiplier/60) - income;
+        addCoins(Math.floor(remainder));
+        remainder -= Math.floor(remainder);
         addCoins(income);
+    }
+    function economyFn(){
         calculateNFTs();
         if(nfts[1]==1){
             clickFn();
@@ -553,7 +560,7 @@ FORMATTING IS BELOW
 --->
 <body>
     <img onclick = "window.location.href = 'https://crobodile.github.io/home/';" class = "logo" src= "logo.png">
-    <button onclick = "devButton();" style = "z-index: 3;position:absolute;right:35px;top:26px;display:none">Dev Menu</button>
+    <button onclick = "devButton();" style = "z-index: 3;position:absolute;right:35px;top:26px;display:block">Dev Menu</button>
     <div id="devMenu" class="content">
         <button onclick = "addCoins(1)" style = "position: absolute;left:20px;top:20px">+1</button>
         <button onclick = "addCoins(10)" style = "position: absolute;left:20px;top:40px">+10</button>
