@@ -533,6 +533,20 @@ STYLES ARE BELOW
     .nftPurchase:disabled{
         background-color: indianred;
     }
+    .logo{
+        z-index:2;
+        height:auto;
+        width:15%;
+        border: 5px double deepskyblue;
+        position:absolute;
+        right: 40px;
+        top: 30px;
+        box-shadow: 0 0 20px #000000;
+        border-radius:5px;
+    }
+    .logo:hover{
+        border:5px double lightskyblue;
+    }
 </style>
     
 </head>
@@ -541,6 +555,7 @@ END OF STYLES
 FORMATTING IS BELOW
 --->
 <body>
+    <img onclick = "window.location.href = 'https://crobodile.github.io/home/';" class = "logo" src= "logo.png">
     <button onclick = "devButton();" style = "z-index: 3;position:absolute;right:35px;top:26px;display:none">Dev Menu</button>
     <div id="devMenu" class="content">
         <button onclick = "addCoins(1)" style = "position: absolute;left:20px;top:20px">+1</button>
