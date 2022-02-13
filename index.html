@@ -1,4 +1,12 @@
-<!--- Ʒerʒ i need this comment at the top so i can copy and paste Ʒerʒ when i need it--->
+<!--- Ʒerʒ©
+          ██████
+              █
+             █
+            ███
+               █
+          █    █
+           ████
+--->
 <!DOCTYPE html>
 <html>
     
@@ -12,17 +20,240 @@ PLEASE KEEP SECTIONS SEPARATE
     //VARIABLES
     var coins = 0;
     var clickValue = 1;
+    var miners = 0;
+    var income = 0;
+    var minerValue = 1;
+    var minercost = 10;
+    var boostcost = 10;
+    var minerClicks = 0;
+    var buttonIds = [
+        "minerbutton",
+        "boostbutton",
+        "nftPurchase0"
+    ];
+    var buttonPrices = [
+        //IN FUNCTION
+    ];
+    
+    
+    var tick = 0;
+    var tickpoint = 0;
+    var tickpoints =[
+
+        40,//0
+        60,
+    ];
+    var tickMsgs=[
+        "News source says ƷerʒCoin is predicted to go up 17341057%.",//0
+        "Reach 5000 Total ƷerʒCoin to unlock the Gallery",
+    ];
+    
+    var totalCoins = 0;
+    var checkpoint = 0;
+    var checkpoints = [
+        10,
+        100,
+        1000,
+        5000,
+        10000,
+        30000,
+        50000,
+        100000,
+    ];
+    var checkMsgs = [
+        //inside function
+    ];
+    
+    var nfts = [
+        0,
+    ];
+    var nftcost = [
+        5000,
+    ]
     
     //FUNCTIONS
     function addCoins(num) {
+        totalCoins += num;
         coins += num;
         updateScreen();
     }   
+    function clickFn(){
+        if(minerClicks == 1){
+        addCoins(income*clickValue);
+        }else{
+        addCoins(clickValue);
+        }
+        document.getElementById("coinimg").style.filter = "drop-shadow(0 0 50px yellow) saturate(1.5)";
+        setTimeout(resetColor,75);
+    }
+    function resetColor(){
+        document.getElementById("coinimg").style.filter = "drop-shadow(0 0 30px yellow) saturate(1)";
+    }
     function updateScreen(){
+        checkButtons();
+        checkCheckpoint()
+        
         document.getElementById("coinDisplay").innerHTML = coins;
+        
+    }
+    function checkCheckpoint(){
+        checkMsgs[0] = "Reached 10 ƷerʒCoin, Upgrades unlocked.";
+        checkMsgs[1] = "You've collected 100 ƷerʒCoin in " + secondsToTime(tick) + "!";
+        checkMsgs[2] = "Reached a total of 1000 ƷerʒCoin in " + secondsToTime(tick) + "!";
+        checkMsgs[3] = "Reached 5000 ƷerʒCoin in " + secondsToTime(tick) + "! Unlocked the Gallery.";
+        checkMsgs[4] = "Reached 10000 ƷerʒCoin in " + secondsToTime(tick) + "!";
+        checkMsgs[5] = "Reached 30000 ƷerʒCoin in " + secondsToTime(tick) + "!";
+        checkMsgs[6] = "Reached 50000 ƷerʒCoin in " + secondsToTime(tick) + "!";
+        checkMsgs[7] = "Reached 100000 ƷerʒCoin in " + secondsToTime(tick) + "!";
+        
+    
+        if(totalCoins >= checkpoints[checkpoint]){
+            if(checkpoint == 0){
+                unlockUpgrades();
+            }else if(checkpoint == 3){
+                unlockGallery();
+            }
+            consoleMsg(checkMsgs[checkpoint]);
+            checkpoint++;
+            checkCheckpoint();
+        }
+    }
+    function secondsToTime(seconds){
+                var minutes = Math.floor(seconds/60);
+                var hours = Math.floor(minutes/60);
+                minutes = minutes%60;
+                var second = seconds%60;
+                if(hours>0){
+                    return(hours + " hours " + minutes + " minutes and "+ second +" seconds");
+                } else if(minutes>0){
+                    return(minutes + " minutes and "+ second +" seconds");
+                }else{
+                    return(second +" seconds");
+                }
+            }
+    function checkButtons(){
+        buttonPrices = [
+            minercost,
+            boostcost,
+            nftcost[0]
+        ];
+        for(var i = 0; i<buttonIds.length; i++){
+            if (coins < buttonPrices[i]){
+                document.getElementById(buttonIds[i]).disabled = true;
+            }else{
+                document.getElementById(buttonIds[i]).disabled = false;
+            }
+        }
+        if (miners < 25){
+                document.getElementById("megaminerbutton").disabled = true;
+            }else{
+                document.getElementById("megaminerbutton").disabled = false;
+            }
+        if (clickValue < 23){
+                document.getElementById("megaclickbutton").disabled = true;
+            }else{
+                document.getElementById("megaclickbutton").disabled = false;
+            }
+    }
+    function buyMiner(){
+        if(coins >= minercost){
+            coins -= minercost;
+            miners++;
+            minercost = Math.floor(minercost*1.3);
+            document.getElementById("minersLabel").innerHTML = miners;
+            document.getElementById("minerCostLabel").innerHTML = minercost;
+            updateScreen();
+        }
+    }
+    function buyBoost(){
+        if(coins >= boostcost){
+            coins -= boostcost;
+            clickValue++;
+            boostcost = Math.floor(boostcost*1.4);
+            document.getElementById("boostLabel").innerHTML = clickValue;
+            document.getElementById("boostCostLabel").innerHTML = boostcost;
+            updateScreen();
+        }
+    }
+    function consoleMsg(msg){
+        var message = "> " + msg;
+        for(var i = 8;i>1;i--){
+            document.getElementById("console" + i).innerHTML = document.getElementById("console" + (i-1)).innerHTML;
+        }
+        document.getElementById("console1").innerHTML = message;
     }
     
+    function unlockUpgrades(){
+        document.getElementById("topleft").style.left = "2.5%";
+        document.getElementById("topright").style.opacity = "1";
+        document.getElementById("topright").style.zIndex = "1"; //z index -1 makes it not clickable
+    }
+    function unlockGallery(){
+        document.getElementById("gallery").style.opacity = "1";
+        document.getElementById("gallery").style.zIndex = "1"; //z index -1 makes it not clickable
+    }
+    
+    function devButton(){
+        if(document.getElementById("devMenu").style.display != "block"){
+            document.getElementById("devMenu").style.display = "block";
+        } else{
+            document.getElementById("devMenu").style.display = "none";
+        }
+    }
+    function unlockMegaMiners(){
+        miners = 1;
+        minerValue = 30;
+        minercost = 500;
+        document.getElementById("minersName").innerHTML = "Mega Miners";
+        document.getElementById("megaminerbutton").style.display = "none";
+        document.getElementById("minersLabel").innerHTML = miners;
+        document.getElementById("minerCostLabel").innerHTML = minercost;
+        updateScreen();
+    }
+    function unlockMinerClick(){
+        clickValue = 1;
+        boostcost = 2000;
+        minerClicks=1;
+         document.getElementById("clickLabel").innerHTML = " Miner Seconds";
+        document.getElementById("megaclickbutton").style.display = "none";
+        document.getElementById("boostLabel").innerHTML = clickValue;
+        document.getElementById("boostCostLabel").innerHTML = boostcost;
+        updateScreen();
+    }
+    function purchaseNFT(num){
+        if(coins>=nftcost[num] && nfts[num] == 0){
+            coins -= nftcost[num];
+            nfts[num] = 1;
+            document.getElementById("nftstatus"+num).innerHTML = "Owned";
+            consoleMsg(nfts[num]);
+            updateScreen();
+        }
+    }
+    
+   //ON START
+    function initiate(){
+        
+        addCoins(90000); //STARTING AMOUNT OF MONEY
+        
+        consoleMsg("ƷerʒClicker 2!");
+        checkButtons;
+        //ACTIVATE TICK LOOP
+        var tickLoop = setInterval(tickFn,1000);
+    }
+    
+    //TICK LOOP
+    function tickFn(){
+        
+        tick++;
+        if(tick >= tickpoints[tickpoint]){
+            consoleMsg(tickMsgs[tickpoint]);
+            tickpoint++;
+        }
+        income = miners * minerValue;
+        addCoins(income);
+    }
 </script>
+    
 <!--- 
 END OF SCRIPTS
 STYLES ARE BELOW
@@ -32,20 +263,22 @@ STYLES ARE BELOW
     background-image: url('zherzhbackground.png');
     background-attachment: fixed;
     font-family: Arial, Helvetica, sans-serif;
+    min-height: 140vh;
     }
     .content {
     background-color: white;
     border: 5px solid gray;
     border-radius: 20px;
     position: absolute;
-   
+    box-shadow: 0 0 20px #000000;
     }
     #topleft {
         width: 30%;
-        left: 2.5%;
+        left: 32.5%;
         top: 190px;
         height: 400px;
         border-color: #c8facb;
+        transition: left .2s ease-in-out;
     }
     #topright{
         width: 62.5%;
@@ -53,34 +286,28 @@ STYLES ARE BELOW
         top:190px;
         height: 400px;
         border-color: #fac8c8;
+        transition-delay: .3s;
     }
     #console{
+        font-size:16px;
         width:95%;
         left:2.5%;
         top: 20px;
-        height:150px;
+        height:auto;
         background-color: #2e2e2e;
         color: white;
         border-radius: 0px; 
         font-family: monospace;
     }
-    #zherzhButton{
-        width:80%;
-        position:absolute;
-        bottom: 10px;
-        left: 50%;
-        transform: translate(-50%,-10%);
-        height: 40%;
-        border: 5px solid green;
-        border-radius: 15px;
-        background-color: green;
-        color: white;
-        font-weight:bold;
-        font-size:30px;
+    #gallery{
+        width: 95%;
+        left: 2.5%;
+        top:620px;
+        height: 400px;
+        border-color: #b28fff;
     }
-    #zherzhButton:hover{
-        border: 5px solid lime;
-    }
+
+    
     .center{
         position:absolute;
         top: 10px;
@@ -94,6 +321,112 @@ STYLES ARE BELOW
         height: 275px;
         top: 85px;
         border-radius:15px;
+        box-shadow: 0 0 10px black;
+    }
+    #coinimg{
+        top:32%;
+        width:55%;
+        height:auto;
+        filter: drop-shadow(0 0 30px yellow) saturate(1);
+        transition: filter .2s ease-in-out, transform .2s ease-in-out;
+    }
+    #coinimg:hover{
+        transform: translate3d(-50%, -13%, 0px);
+        filter: drop-shadow(0 0 50px yellow) saturate(1);
+    }
+    .upgradeLabel{
+        position:absolute;
+        left: 30px;
+        font-size:25px;
+        top:10px;
+    }
+    .upgradeimg{
+        width: 30%;
+        height:auto;
+        right:20px;
+        position:absolute;
+        top:40px;
+    }
+    .upgradebutton{
+        border: 3px solid black;
+        border-radius: 10px;
+        height: 20%;
+        width:40%;
+        font-size: 20px;
+        position:absolute;
+        top:90px;
+        left:20px;
+    }
+    .upgradestat{
+        position:absolute;
+        bottom:10px;
+        left:30px;
+    }
+    .unlocked{
+        opacity: 0;
+        z-index: -1; /*z index -1 makes it not clickable*/
+        transition: opacity .2s linear;
+    }
+    #devMenu{
+        z-index:2;
+        height:200px;
+        width:40%;
+        position:absolute;
+        right: 30px;
+        top: 25px;
+        display:none;
+    }
+    .megaButtons{
+        border: 3px solid black;
+        border-radius: 10px;
+        height: 20%;
+        width:95%;
+        font-size: 20px;
+        position:absolute;
+        bottom: 10px;
+        right: 10px;
+    }
+    .nft{
+        position:absolute;
+        border: 1px solid black;
+        width: 20%;
+        height: 275px;
+        top: 85px;
+        border-radius:15px;
+        box-shadow: 0 0 10px black;
+    }
+    #nft0{
+        left: 10px;
+    }
+    .nftimage{
+        height: 60%;
+        width: auto;
+        position:absolute;
+        left:10px;
+        top:20%;
+    }
+    .nftLabel{
+        position:absolute;
+        left:10px;
+    }
+    .nftValueLabel{
+        position:absolute;
+        right: 20px;
+        bottom:60%;
+    }
+    .nftPurchase{
+        position:absolute;
+        right: 10px;
+        bottom: 30%;
+        background-color: darkseagreen;
+        color: white;
+        border: none;
+        border-radius: 15px;
+        height: 40px;
+        width:40
+    }
+    .nftPurchase:disabled{
+        background-color: indianred;
     }
 </style>
     
@@ -103,25 +436,65 @@ END OF STYLES
 FORMATTING IS BELOW
 --->
 <body>
-     <div id = "console" class = "content">
-        <span style="position:absolute; padding:10px; bottom:0px">> basically no code yet, just making the whole layout first<br>> code will come</span>
+    <button onclick = "devButton();" style = "z-index: 3;position:absolute;right:35px;top:26px;display:block">Dev Menu</button>
+    <div id="devMenu" class="content">
+        <button onclick = "addCoins(1)" style = "position: absolute;left:20px;top:20px">+1</button>
+        <button onclick = "addCoins(10)" style = "position: absolute;left:20px;top:40px">+10</button>
+        <button onclick = "addCoins(100)" style = "position: absolute;left:20px;top:60px">+100</button>
+        <button onclick = "addCoins(1000)" style = "position: absolute;left:20px;top:80px">+1000</button>
+        <button onclick = "tickFn()" style = "position: absolute;left:20px;top:100px">tick</button>
     </div>
+    
+     <div id = "console" class = "content">
+        <span id=console8></span><br>
+         <span id=console7>&nbsp;&nbsp;██████ ©</span><br>
+         <span id=console6>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;█</span><br>
+         <span id=console5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;█</span><br>
+         <span id=console4>&nbsp;&nbsp;&nbsp;&nbsp;███</span><br>
+         <span id=console3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;█</span><br>
+         <span id=console2>&nbsp;&nbsp;█&nbsp;&nbsp;&nbsp;&nbsp;█</span><br>
+         <span id=console1>&nbsp;&nbsp;&nbsp;████</span><br>
+                 
+    </div>
+    
     
     <div id= "topleft" class = "content">
-        <h1 id = "coinDisplay" class = "center" style = "top:15px;color:gold;" >0</h1>
-        <img src="zherzhcoin.png" class = "center" style = "top:100px;width:100px;height:100px">
-        <button onclick ="addCoins(clickValue)" id = "zherzhButton">Generate ƷerʒCoin</button>
+        <h1 id = "coinDisplay" class = "center" style = "font-size:50px;top:-10px;color:gold;" >0</h1>
+        <img onclick ="clickFn()" id = "coinimg" src="zherzhcoin.png" class = "center">
     </div>
     
-    <div id= "topright" class = "content">
-        <h1 style = "position:absolute; left:5%;">Upgrades</h1>
+    <div id= "topright" class = "content unlocked">
+ 
+
+        <h1 style = "position:absolute; left:20px;">Upgrades</h1>
         <div class= "upgrades" id="miners" style="left:5%">
-            <h3 class="center" style = "font-weight: normal">Miners</h3>
+            <h3 class = "upgradeLabel"><span id="minersLabel">0</span> <span id = "minersName">Miners</span></h3>
+            <img class="upgradeimg" src="miner.png">
+            <button disabled = "true" onclick= "buyMiner()" id = "minerbutton" class="upgradebutton">Cost: <span id="minerCostLabel">10</span></button>
+            <button disabled = "true" onclick= "unlockMegaMiners()" class = "megaButtons" id="megaminerbutton" >Research Mega Miners: Requires 25 Miners</button>
+            
         </div>
         <div class= "upgrades" id="boosts" style="right:5%">
-            <h3 class="center" style = "font-weight: normal">Boosts</h3>
+            <h3 class = "upgradeLabel"><span id="boostLabel">1</span><span id=clickLabel></span> Per Click</h3>
+            <img style = "top: 70px" class="upgradeimg" src="clickicon.png">
+            <button disabled = "true" onclick= "buyBoost()" id = "boostbutton" class="upgradebutton">Cost: <span id="boostCostLabel">10</span></button>
+            <button disabled = "true" onclick= "unlockMinerClick()" class = "megaButtons" id = "megaclickbutton" >Unlock Miner Clicks: Requires Level 23 Clicks</button>
+
         </div>
     </div>
+    <div id = "gallery" class= "content unlocked">
+        <h1 style = "position:absolute; left:20px;">Gallery</h1>
+        <div class = "nft" id = "nft0">
+            <img class = "nftimage" src="cat%20drinking.gif">
+            <h3 class = "nftLabel">Cat Drinking: <span id = "nftstatus0">For Sale</span></h3>
+            <p class = "nftValueLabel">Value: <span id=nftcost0>5000</span></p>
+            <button onclick = "purchaseNFT(0)" class = "nftPurchase" id = "nftPurchase0">Purchase NFT</button>
+        </div>
+        
+    </div>
+    
 </body>
+    
+<script>initiate();</script>
 
 </html>
