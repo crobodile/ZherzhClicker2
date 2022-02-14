@@ -18,6 +18,7 @@ PLEASE KEEP SECTIONS SEPARATE
 --->
 <script>
     //VARIABLES
+    var UUID = Math.floor( Math.random * 1000000);
     var coins = 0;
     var clickValue = 1;
     var miners = 0;
@@ -260,7 +261,7 @@ PLEASE KEEP SECTIONS SEPARATE
             updateScreen();
             if(num == 3){
                 consoleMsg("This is the end of the game fo now idk what else to add")
-                consoleMsg("Screenshot this message and DM to crobodile#0905 to recieve your coin.");
+                consoleMsg("Screenshot this message and DM to crobodile#0905 to recieve your coin. Unique ID: " + UUID);
             }
         }
     }
