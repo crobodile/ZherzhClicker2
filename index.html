@@ -102,9 +102,9 @@ PLEASE KEEP SECTIONS SEPARATE
     }   
     function clickFn(){
         if(minerClicks == 1){
-        addCoins(income*clickValue*60);
+          addCoins(miners * minerValue * minerMultiplier*clickValue);
         }else{
-        addCoins(clickValue);
+          addCoins(clickValue);
         }
         document.getElementById("coinimg").style.filter = "drop-shadow(0 0 50px yellow) saturate(1.5)";
         setTimeout(resetColor,75);
