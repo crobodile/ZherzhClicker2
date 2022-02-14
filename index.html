@@ -314,6 +314,22 @@ PLEASE KEEP SECTIONS SEPARATE
     function showdevbutton(){
           document.getElementById("devbutton").style.display = "block";         
     }
+    function fastforward(){
+     for(var i = 0; i<600; i++){
+       tick += 1;
+        if(tick >= tickpoints[tickpoint]){
+            consoleMsg(tickMsgs[tickpoint]);
+            tickpoint++;
+        }
+        income = Math.floor(miners * minerValue * minerMultiplier);
+        remainder += (miners * minerValue * minerMultiplier) - income;
+        addCoins(Math.floor(remainder));
+        remainder -= Math.floor(remainder);
+        addCoins(income);
+               
+       economyFn();
+     }
+    }
     
    //ON START
     function initiate(){
@@ -574,6 +590,7 @@ FORMATTING IS BELOW
         <button onclick = "addCoins(10000)" style = "position: absolute;left:20px;top:100px">+10000</button>
         <button onclick = "addCoins(100000)" style = "position: absolute;left:20px;top:120px">+100000</button>
         <button onclick = "addCoins(coins*9)" style = "position: absolute;left:20px;top:140px">x10</button>
+        <button onclick = "fastforward()" style = "position: absolute;left:20px;top:160px">fast forward 10 minutes</button>
     </div>
     
      <div id = "console" class = "content">
